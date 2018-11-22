@@ -1,6 +1,9 @@
 {
   "name": "view-on-environment",
   "version": "0.1.0",
+  "author": "Kat Hicks",
+  "description": "Data visualisations on state of environment and environmental issues around the world",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "react": "^16.6.3",
