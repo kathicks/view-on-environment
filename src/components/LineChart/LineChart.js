@@ -5,26 +5,45 @@ import getRenewables from '../../service/dataRenewables'
 import './LineChart.css';
 
 class LineChart extends Component {
-  componentDidMount() {
-    getData()
-      .then(
-        data => drawGraph(data)
-      );
+  state = {
+    selectedLocation: "WORLD"
   }
+
+  componentDidMount() {
+    loadGraph(this.state.selectedLocation);
+  }
+
+  componentDidUpdate() {
+    loadGraph(this.state.selectedLocation);
+  }
+  
 
   render() {
     return (
-      <svg width="80vw" height="60vh"></svg>
-    );
+      <div>
+        <select onChange={(event) => this.setState({selectedLocation: event.target.value})}>
+          <option value="WORLD">World</option>
+          <option value="GBR">United Kingdom</option>
+          <option value="USA">United States</option>
+        </select>
+        <svg width="80vw" height="60vh"></svg>
+      </div>
+    )
   }
 }
 
-function getData() {
+function loadGraph(location) {
+  getData(location)
+      .then(data => drawGraph(data))
+    }
+
+function getData(selectedLocation) {
   var parseYear = d3.timeParse("%Y");
 
   return getRenewables()
-    .then(json => json.data.filter(item => item.location === "WORLD"))
+    .then(json => json.data.filter(item => item.location === selectedLocation))
     .then(data => data.filter(item => item.value !== ""))
+    .then(data => data.filter(item => item.time !== 2016))
     .then(data => data.map(
       data => {
         return {
@@ -36,16 +55,36 @@ function getData() {
 }
 
 function drawGraph(data) {
+
+  d3.selectAll("svg > *").remove();
+
   var margin = { top: 60, right: 60, bottom: 60, left: 60 };
   var width = parseFloat(d3.select('svg').style('width')) - margin.left - margin.right
   var height = parseFloat(d3.select('svg').style('height')) - margin.top - margin.bottom
 
   var x = d3.scaleTime()
-    .domain(d3.extent(data, d => d.date))
+    .domain(
+      d3.extent(data, d => d.date)
+    )
     .range([0, width])
 
+  function getYAxisMinValue() {
+    if (Math.floor(d3.min(data, d => d.value) - 0.5) <= 0) {
+      return 0
+    } else {
+      return Math.floor(d3.min(data, d => d.value) - 0.5)
+    }
+  }
+
+  function getYAxisMaxValue() {
+    return Math.ceil(d3.max(data, d => d.value) + 0.5)
+  }
+
   var y = d3.scaleLinear()
-    .domain([Math.floor(d3.min(data, d => d.value) - 0.5), Math.ceil(d3.max(data, d => d.value) + 0.5)])
+    .domain([
+      getYAxisMinValue(), 
+      getYAxisMaxValue()
+    ])
     .range([height, 0])
 
   const svg = d3.select('svg')
