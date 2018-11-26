@@ -3,10 +3,11 @@ import * as d3 from "d3";
 
 import getRenewables from '../../service/dataRenewables'
 import './LineChart.css';
+import getCountries from '../../service/dataCountries';
 
 class LineChart extends Component {
   state = {
-    selectedLocation: "WORLD"
+    selectedLocation: "WORLD",
   }
 
   componentDidMount() {
@@ -16,8 +17,7 @@ class LineChart extends Component {
   componentDidUpdate() {
     loadGraph(this.state.selectedLocation);
   }
-  
-
+    
   render() {
     return (
       <div>
@@ -142,7 +142,6 @@ function drawAxis(svg, x, y, width, height) {
     .text("Year");
 
   svg.append("g")
-    .attr("transform", "translate(0," + width - 1 + ")")
     .call(d3.axisLeft(y));
 
   svg.append("text")
