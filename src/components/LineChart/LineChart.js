@@ -7,41 +7,53 @@ import getCountries from '../../service/dataCountries';
 
 class LineChart extends Component {
   state = {
-    selectedLocation: "WORLD",
+    country: "WORLD",
+    options: []
   }
-
+  
   componentDidMount() {
-    loadGraph(this.state.selectedLocation);
+    this.setOptions();
+    this.loadGraph(this.state.country);
   }
 
   componentDidUpdate() {
-    loadGraph(this.state.selectedLocation);
+    this.loadGraph(this.state.country);
   }
+
+  setOptions = () => getCountries()
+      .then(json => json.data)
+      .then(countries => {
+        this.setState({ options: countries })
+      })
+  
+
+  loadGraph = (location) => getData(location)
+      .then(data => drawGraph(data))
+      
     
   render() {
     return (
       <div>
-        <select onChange={(event) => this.setState({selectedLocation: event.target.value})}>
-          <option value="WORLD">World</option>
-          <option value="GBR">United Kingdom</option>
-          <option value="USA">United States</option>
+        <select onChange={(event) => this.setState({country: event.target.value})}>
+          { this.state.options.map(
+            (option) => 
+              <option value={ option.iso3_code }>
+                { option.country_name }
+              </option>
+          ) }
         </select>
         <svg width="80vw" height="60vh"></svg>
       </div>
     )
   }
+
 }
 
-function loadGraph(location) {
-  getData(location)
-      .then(data => drawGraph(data))
-    }
-
-function getData(selectedLocation) {
+function getData(country) {
   var parseYear = d3.timeParse("%Y");
 
   return getRenewables()
-    .then(json => json.data.filter(item => item.location === selectedLocation))
+    .then(json => json.data.filter(item => item.location === country))
     .then(data => data.filter(item => item.value !== ""))
     .then(data => data.filter(item => item.time !== 2016))
     .then(data => data.map(
