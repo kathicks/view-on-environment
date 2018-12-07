@@ -3,50 +3,26 @@ import * as d3 from "d3";
 
 import getRenewables from '../../service/dataRenewables'
 import './LineChart.css';
-import getCountries from '../../service/dataCountries';
 
-class LineChart extends Component {
-  state = {
-    country: "WORLD",
-    options: []
-  }
-  
+class LineChart extends Component {  
   componentDidMount() {
-    this.setOptions();
-    this.loadGraph(this.state.country);
+    this.loadGraph(this.props.country);
   }
 
   componentDidUpdate() {
-    this.loadGraph(this.state.country);
+    this.loadGraph(this.props.country);
   }
-
-  setOptions = () => getCountries()
-      .then(json => json.data)
-      .then(countries => {
-        this.setState({ options: countries })
-      })
-  
-
-  loadGraph = (location) => getData(location)
-      .then(data => drawGraph(data))
       
-    
   render() {
     return (
       <div>
-        <select onChange={(event) => this.setState({country: event.target.value})}>
-          { this.state.options.map(
-            (option) => 
-              <option value={ option.iso3_code }>
-                { option.country_name }
-              </option>
-          ) }
-        </select>
         <svg width="80vw" height="60vh"></svg>
       </div>
     )
   }
 
+  loadGraph = (location) => getData(location)
+    .then(data => drawGraph(data))
 }
 
 function getData(country) {
