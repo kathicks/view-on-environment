@@ -16,7 +16,7 @@ class Dropdown extends Component {
     render() {
         return (
             <select className='dropdown' onChange={this.props.handleChange}>
-                <option value="" disabled>Select a country</option>
+                <option value="" disabled selected hidden>Select a country</option>
             { 
                 this.state.options.map((option) => 
                     <option value={ option.iso3_code }>
