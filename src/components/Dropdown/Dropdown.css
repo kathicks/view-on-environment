@@ -1,0 +1,7 @@
+.dropdown {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 45%;
+    margin: 0 20px;
+}

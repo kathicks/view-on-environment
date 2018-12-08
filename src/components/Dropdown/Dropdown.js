@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import getCountries from '../../service/dataCountries';
 
+import './Dropdown.css';
+
 class Dropdown extends Component {
     state = {
         options: []
@@ -13,7 +15,8 @@ class Dropdown extends Component {
     
     render() {
         return (
-            <select onChange={this.props.handleChange}>
+            <select className='dropdown' onChange={this.props.handleChange}>
+                <option value="" disabled>Select a country</option>
             { 
                 this.state.options.map((option) => 
                     <option value={ option.iso3_code }>

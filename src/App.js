@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Header from './components/Header/Header';
-import Dropdown from './components/Dropdown/Dropdown';
 import LineChart from './components/LineChart/LineChart';
 
 class App extends Component {
@@ -23,8 +22,7 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <Header />
-        <Dropdown handleChange={ this.handleChange } />
+        <Header handleChange={ this.handleChange }/>
         <LineChart country={ this.state.country } />
       </div>
     );

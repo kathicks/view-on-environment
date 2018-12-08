@@ -1,8 +1,10 @@
 .header {
     padding: 0.5px 20px;
     background-color: #d3d3d3;
+    position: relative;
 }
 
 .header_title {
+    display: inline-block;
     font-size: 20px;
 }
