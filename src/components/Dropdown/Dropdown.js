@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
 import getCountries from '../../service/dataCountries';
+import getRenewables from '../../service/dataRenewables';
 
 import './Dropdown.css';
-import getRenewables from '../../service/dataRenewables';
 
 class Dropdown extends Component {
     state = {
@@ -17,10 +17,9 @@ class Dropdown extends Component {
     render() {
         return (
             <select className='dropdown' onChange={this.props.handleChange}>
-                <option value="" disabled selected hidden>Select a country</option>
             { 
                 this.state.options.map((option) => 
-                    <option value={ option.iso3_code }>
+                    <option value={ option.iso3_code } key={ option.iso3_code }>
                         { option.country_name }
                     </option>
                 ) 
@@ -45,9 +44,7 @@ class Dropdown extends Component {
                 .then(output => output.sort((a, b) => 
                     (a.country_name > b.country_name) ? 1 : ((b.country_name > a.country_name) ? -1 : 0)
                 ))
-                .then(final => final.concat(
-                    { iso3_code: 'WORLD', country_name: 'World' }
-                ))
+                .then(final => [{ iso3_code: 'WORLD', country_name: 'Select a country' }].concat(final))
                 .then(result => this.setState({ options: result }))
         })
 }
